@@ -19,6 +19,11 @@ app.use(express.json());
 const specs = swaggerJSDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
+// Debug endpoint to see the generated OpenAPI spec
+app.get('/api-spec', (req, res) => {
+    res.json(specs);
+});
+
 // Health check
 app.get('/health', (req, res) => {
     res.json({

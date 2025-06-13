@@ -29,6 +29,65 @@ const leagueController = new LeagueController();
  *         status:
  *           type: string
  *           enum: [draft, active, completed]
+ *     LeagueResponse:
+ *       type: object
+ *       properties:
+ *         leagueResponse:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               league:
+ *                 $ref: '#/components/schemas/League'
+ *               userRole:
+ *                 type: string
+ *                 enum: [creator, member]
+ *     LeagueMember:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           format: uuid
+ *         userId:
+ *           type: string
+ *           format: uuid
+ *         role:
+ *           type: string
+ *           enum: [creator, member]
+ *         joinedAt:
+ *           type: string
+ *           format: date-time
+ *     CreateLeagueRequest:
+ *       type: object
+ *       required:
+ *         - name
+ *         - settings
+ *       properties:
+ *         name:
+ *           type: string
+ *           minLength: 3
+ *           maxLength: 100
+ *         description:
+ *           type: string
+ *           maxLength: 500
+ *         settings:
+ *           type: object
+ *           properties:
+ *             maxPlayers:
+ *               type: integer
+ *               minimum: 2
+ *               maximum: 20
+ *             scoring:
+ *               type: string
+ *     Error:
+ *       type: object
+ *       properties:
+ *         error:
+ *           type: string
+ *         details:
+ *           type: array
+ *           items:
+ *             type: object
  */
 
 /**
@@ -44,17 +103,7 @@ const leagueController = new LeagueController();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - name
- *               - settings
- *             properties:
- *               name:
- *                 type: string
- *               description:
- *                 type: string
- *               settings:
- *                 type: object
+ *             $ref: '#/components/schemas/CreateLeagueRequest'
  *     responses:
  *       201:
  *         description: League created successfully
@@ -74,6 +123,10 @@ router.post('/', authenticate, validateCreateLeague, leagueController.createLeag
  *     responses:
  *       200:
  *         description: List of user's leagues
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/LeagueResponse'
  */
 router.get('/', authenticate, leagueController.getUserLeagues.bind(leagueController));
 
@@ -94,6 +147,10 @@ router.get('/', authenticate, leagueController.getUserLeagues.bind(leagueControl
  *     responses:
  *       200:
  *         description: League details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/League'
  *       404:
  *         description: League not found
  */
@@ -144,6 +201,12 @@ router.post('/:id/join', authenticate, validateLeagueParams, leagueController.jo
  *     responses:
  *       200:
  *         description: List of league members
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/LeagueMember'
  */
 router.get('/:id/members', authenticate, validateLeagueParams, leagueController.getLeagueMembers.bind(leagueController));
 

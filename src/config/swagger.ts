@@ -24,7 +24,7 @@ const swaggerOptions = {
       },
     },
   },
-  apis: ['../routes/*.ts'],
+  apis: [__dirname + '/../routes/*.ts', __dirname + '/../routes/index.ts'],
 };
 
 export default swaggerOptions;
