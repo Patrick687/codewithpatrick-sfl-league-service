@@ -8,6 +8,7 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerOptions from './config/swagger';
 import swaggerUi from 'swagger-ui-express';
 import leagueRoutes from './routes/index';
+import { createHealthResponse } from './utils/responseHelpers';
 
 const app = express();
 const port = serviceConfig.SERVER_PORT;
@@ -26,11 +27,7 @@ app.get('/api-spec', (req, res) => {
 
 // Health check
 app.get('/health', (req, res) => {
-    res.json({
-        status: 'ok',
-        service: 'league-service',
-        timestamp: new Date().toISOString(),
-    });
+    res.json(createHealthResponse());
 });
 
 app.use('/leagues', leagueRoutes);
